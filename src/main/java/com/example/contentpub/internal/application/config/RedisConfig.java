@@ -1,6 +1,6 @@
 package com.example.contentpub.internal.application.config;
 
-import com.example.contentpub.internal.external.dto.NotifyDto;
+import com.example.contentpub.internal.domain.dto.messaging.NotifyDto;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
@@ -18,7 +18,7 @@ public class RedisConfig {
 
     @Bean
     ChannelTopic topic() {
-        return new ChannelTopic("payments");
+        return new ChannelTopic("content-notification");
     }
 
     @Bean

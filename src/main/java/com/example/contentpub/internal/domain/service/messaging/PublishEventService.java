@@ -1,7 +1,9 @@
 package com.example.contentpub.internal.domain.service.messaging;
 
-public interface PublishEventService<T> {
+import com.example.contentpub.internal.domain.dto.messaging.NotifyDto;
 
-    void publishNotification(T message);
+public interface PublishEventService {
+
+    void publishNotification(NotifyDto message);
 
 }
