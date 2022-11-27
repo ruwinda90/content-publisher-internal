@@ -1,7 +1,7 @@
 package com.example.contentpub.internal.domain.service.messaging;
 
-public interface PublishEventService {
+public interface PublishEventService<T> {
 
-    void publishNotification(String message);
+    void publishNotification(T message);
 
 }
