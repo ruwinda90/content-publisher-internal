@@ -31,7 +31,7 @@ public class MessageUtil {
             JSONObject messageJson = new JSONObject(ow.writeValueAsString(messageDto));
             messageJson.put("timestamp", (new Date()).toString());
 
-            if (isNotificationSendEnabled) { // This is only used to Disable Kafka in AWS setup.
+            if (isNotificationSendEnabled) {
                 publishEventService.publishNotification(messageJson.toString());
             }
 
