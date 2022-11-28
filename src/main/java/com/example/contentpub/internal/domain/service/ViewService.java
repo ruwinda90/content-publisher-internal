@@ -66,7 +66,6 @@ public class ViewService {
                     .stream().map(item -> ContentListItemView.builder()
                             .id(item.getId())
                             .title(item.getTitle())
-                            .summary(item.getSummary())
                             .createdAt(item.getCreatedAt().toString())
                             .updatedAt(item.getUpdatedAt().toString())
                             .writer(Writer.builder().id(item.getWriterId()).name(item.getWriterName()).build())

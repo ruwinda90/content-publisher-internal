@@ -13,8 +13,6 @@ public class ContentListItemView {
 
     private String title;
 
-    private String summary;
-
     private String createdAt;
 
     private String updatedAt;
