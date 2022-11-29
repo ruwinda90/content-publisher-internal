@@ -1,17 +1,19 @@
 package com.example.contentpub.internal.domain.service.messaging;
 
 import com.example.contentpub.internal.domain.dto.messaging.MessageDto;
+import com.example.contentpub.internal.domain.dto.messaging.NotifyDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONObject;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -28,11 +30,17 @@ public class MessageUtil {
 
         try {
             ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-            JSONObject messageJson = new JSONObject(ow.writeValueAsString(messageDto));
+            org.json.JSONObject message = new org.json.JSONObject(ow.writeValueAsString(messageDto));
+            JSONObject messageJson = new JSONObject(message.toMap());
             messageJson.put("timestamp", (new Date()).toString());
 
-            if (isNotificationSendEnabled) { // This is only used to Disable Kafka in AWS setup.
-                publishEventService.publishNotification(messageJson.toString());
+            NotifyDto notification = NotifyDto.builder()
+                    .id(UUID.randomUUID().toString())
+                    .data(messageJson)
+                    .build();
+
+            if (isNotificationSendEnabled) {
+                publishEventService.publishNotification(notification);
             }
 
         } catch (JsonProcessingException ex) {

@@ -8,8 +8,6 @@ public interface CompactContentDbView {
 
     String getTitle();
 
-    String getSummary();
-
     Date getCreatedAt();
 
     Date getUpdatedAt();

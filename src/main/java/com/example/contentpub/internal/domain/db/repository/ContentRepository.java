@@ -25,11 +25,10 @@ public interface ContentRepository extends JpaRepository<Content, Integer> {
             " INNER JOIN writer as c ON a.writer_id = c.id;", nativeQuery = true)
     Optional<ContentDbView> findByIdWithDetails(@Param("contentId") Integer id);
 
-    @Query(value = "SELECT a.id as id, a.title as title, b.summary as summary, a.created_at as createdAt," +
+    @Query(value = "SELECT a.id as id, a.title as title, a.created_at as createdAt," +
             " a.updated_at as updatedAt, c.id as writerId, c.name as writerName FROM" +
                         " (SELECT * FROM content WHERE category_id = :categoryId" +
                         " ORDER BY updated_at DESC LIMIT :pageSize OFFSET :offset) AS a" +
-                    " INNER JOIN content_details AS b ON a.id = b.content_id" +
                     " INNER JOIN writer as c ON a.writer_id = c.id;", nativeQuery = true)
     List<CompactContentDbView> findContentByCategoryWithPagination(@Param("categoryId") Integer categoryId,
                                                                    @Param("pageSize") Integer pageSize,
