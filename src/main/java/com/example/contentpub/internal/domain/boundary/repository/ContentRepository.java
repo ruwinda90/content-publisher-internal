@@ -1,8 +1,8 @@
-package com.example.contentpub.internal.domain.db.repository;
+package com.example.contentpub.internal.domain.boundary.repository;
 
-import com.example.contentpub.internal.domain.db.entity.Content;
-import com.example.contentpub.internal.domain.db.projection.CompactContentDbView;
-import com.example.contentpub.internal.domain.db.projection.ContentDbView;
+import com.example.contentpub.internal.external.entity.Content;
+import com.example.contentpub.internal.external.entity.projection.CompactContentDbView;
+import com.example.contentpub.internal.external.entity.projection.ContentDbView;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

@@ -1,6 +1,6 @@
-package com.example.contentpub.internal.domain.db.repository;
+package com.example.contentpub.internal.domain.boundary.repository;
 
-import com.example.contentpub.internal.domain.db.entity.Writer;
+import com.example.contentpub.internal.external.entity.Writer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

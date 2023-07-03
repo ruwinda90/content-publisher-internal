@@ -1,12 +1,12 @@
 package com.example.contentpub.internal.domain.service;
 
-import com.example.contentpub.internal.domain.db.projection.ContentDbView;
+import com.example.contentpub.internal.external.entity.projection.ContentDbView;
 import com.example.contentpub.internal.domain.dto.CommonDomainResponse;
 import com.example.contentpub.internal.domain.dto.view.*;
-import com.example.contentpub.internal.domain.db.projection.CompactContentDbView;
+import com.example.contentpub.internal.external.entity.projection.CompactContentDbView;
 import com.example.contentpub.internal.domain.exception.DomainException;
-import com.example.contentpub.internal.domain.db.repository.CategoryRepository;
-import com.example.contentpub.internal.domain.db.repository.ContentRepository;
+import com.example.contentpub.internal.domain.boundary.repository.CategoryRepository;
+import com.example.contentpub.internal.domain.boundary.repository.ContentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;

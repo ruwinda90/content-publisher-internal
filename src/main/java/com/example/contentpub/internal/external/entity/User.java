@@ -1,4 +1,4 @@
-package com.example.contentpub.internal.domain.db.entity;
+package com.example.contentpub.internal.external.entity;
 
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;

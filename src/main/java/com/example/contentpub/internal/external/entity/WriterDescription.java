@@ -1,4 +1,4 @@
-package com.example.contentpub.internal.domain.db.entity;
+package com.example.contentpub.internal.external.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,19 +12,17 @@ import javax.persistence.*;
 @Setter
 @Getter
 @Entity
-@Table(name = "content_details")
-public class ContentDetails {
+@Table(name = "writer_description")
+public class WriterDescription {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "content_id", referencedColumnName = "id")
-    private Content content;
+    @JoinColumn(name = "writer_id", referencedColumnName = "id")
+    private Writer writer;
 
-    private String summary;
+    private String description;
 
-    @Column(columnDefinition = "text")
-    private String details;
 }
