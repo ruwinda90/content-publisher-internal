@@ -26,6 +26,7 @@ public class ContentController {
 
     /**
      * Create new content.
+     *
      * @param contentCreateRequest the new content details.
      * @return the response indicating the status of the request.
      */
@@ -50,8 +51,9 @@ public class ContentController {
 
     /**
      * Update an existing content. Only the owner of the content can edit the content.
+     *
      * @param contentModifyRequest the request body containing updated fields of the content.
-     * @param contentId the ID of the content as a URL path variable.
+     * @param contentId            the ID of the content as a URL path variable.
      * @return the response indicating the status of the request.
      */
     @PutMapping("/content/{id}")
@@ -76,7 +78,8 @@ public class ContentController {
 
     /**
      * Delete an existing content. Only the content owner can delete the content.
-     * @param userId the user ID as a request parameter.
+     *
+     * @param userId    the user ID as a request parameter.
      * @param contentId the content ID to be deleted.
      * @return the response indicating the status of the request.
      */

@@ -24,9 +24,10 @@ public class ViewController {
 
     /**
      * View a list of content according to search criteria. Does not contain the content details of the fetched content.
+     *
      * @param categoryId the category ID of the articles.
-     * @param page the index of the page as request parameter.
-     * @param pageSize the pageSize as request parameter.
+     * @param page       the index of the page as request parameter.
+     * @param pageSize   the pageSize as request parameter.
      * @return the list of content matching the criteria as request parameter.
      */
     @GetMapping("/content")
@@ -48,6 +49,7 @@ public class ViewController {
 
     /**
      * Fetch all the relevant details of single content.
+     *
      * @param contentId the ID of the content as a URL path variable.
      * @return the details of the content.
      */

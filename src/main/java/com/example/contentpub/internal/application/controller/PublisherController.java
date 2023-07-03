@@ -23,6 +23,7 @@ public class PublisherController {
 
     /**
      * The endpoint to change the user role from READER to WRITER.
+     *
      * @param createPublisherRequest the request body containing details of the new writer.
      * @return the response indicating the status of the request.
      */
