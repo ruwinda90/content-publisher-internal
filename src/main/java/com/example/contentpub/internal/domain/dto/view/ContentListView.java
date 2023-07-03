@@ -15,7 +15,7 @@ public class ContentListView {
 
     private List<ContentListItemView> contentList;
 
-    private Integer totalCount;
+    private Long totalCount;
 
     private Integer currentPage;
 

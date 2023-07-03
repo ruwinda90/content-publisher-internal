@@ -2,8 +2,8 @@ package com.example.contentpub.internal.application.controller;
 
 import com.example.contentpub.internal.domain.constant.ContentAction;
 import com.example.contentpub.internal.domain.dto.messaging.MessageDto;
-import com.example.contentpub.internal.domain.service.messaging.MessageUtil;
 import com.example.contentpub.internal.domain.dto.messaging.NotifyDto;
+import com.example.contentpub.internal.domain.service.interfaces.messaging.MessageService;
 import com.example.contentpub.internal.external.service.messaging.RedisMessagePublisher;
 import net.minidev.json.JSONObject;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,16 +15,15 @@ public class TestController {
 
     private final RedisMessagePublisher messagePublisher;
 
-    private final MessageUtil messageUtil;
+    private final MessageService messageService;
 
-    public TestController(RedisMessagePublisher messagePublisher, MessageUtil messageUtil) {
+    public TestController(RedisMessagePublisher messagePublisher, MessageService messageService) {
         this.messagePublisher = messagePublisher;
-        this.messageUtil = messageUtil;
+        this.messageService = messageService;
     }
 
     @GetMapping("/redis-test")
-    public String redisTrigger(@RequestParam("name") String name,
-                               @RequestParam("desc") String description) {
+    public String redisTrigger(@RequestParam("name") String name, @RequestParam("desc") String description) {
 
         NotifyDto notifyDto = new NotifyDto();
         notifyDto.setData(new JSONObject());
@@ -35,8 +34,7 @@ public class TestController {
     }
 
     @GetMapping("/redis-test2")
-    public String redisTrigger2(@RequestParam("name") String name,
-                               @RequestParam("desc") String description) {
+    public String redisTrigger2(@RequestParam("name") String name, @RequestParam("desc") String description) {
 
         NotifyDto notifyDto = new NotifyDto();
         notifyDto.setData(new JSONObject());
@@ -47,7 +45,7 @@ public class TestController {
         messageDto.setActionType(ContentAction.CREATE);
         messageDto.setCategory("hemmlo");
 
-        messageUtil.prepareAndSendMessage(messageDto);
+        messageService.prepareAndSendMessage(messageDto);
         return "done";
     }
 

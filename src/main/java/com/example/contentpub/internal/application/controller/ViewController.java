@@ -5,7 +5,8 @@ import com.example.contentpub.internal.domain.dto.CommonDomainResponse;
 import com.example.contentpub.internal.domain.dto.view.ContentItemView;
 import com.example.contentpub.internal.domain.dto.view.ContentListView;
 import com.example.contentpub.internal.domain.dto.view.ViewDomainRequest;
-import com.example.contentpub.internal.domain.service.ViewService;
+import com.example.contentpub.internal.domain.service.impl.ViewServiceImpl;
+import com.example.contentpub.internal.domain.service.interfaces.ViewService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,7 @@ public class ViewController {
 
     private final ViewService viewService;
 
-    public ViewController(ViewService viewService) {
+    public ViewController(ViewServiceImpl viewService) {
         this.viewService = viewService;
     }
 
@@ -33,9 +34,9 @@ public class ViewController {
      * @return the list of content matching the criteria as request parameter.
      */
     @GetMapping("/content")
-    public ResponseEntity<CommonApiResponse<ContentListView>> getContentList(@RequestParam(name = CATEGORY_ID) Integer categoryId,
-                                                                          @RequestParam(name = PAGE) Integer page,
-                                                                          @RequestParam(name = PAGE_SIZE) Integer pageSize) {
+    public ResponseEntity<CommonApiResponse<ContentListView>> getContentList(
+            @RequestParam(name = CATEGORY_ID) Integer categoryId, @RequestParam(name = PAGE) Integer page,
+            @RequestParam(name = PAGE_SIZE) Integer pageSize) {
 
         ViewDomainRequest requestEntity = ViewDomainRequest.builder()
                 .categoryId(categoryId)
@@ -56,7 +57,8 @@ public class ViewController {
      * @return the details of the content.
      */
     @GetMapping("/content/{id}")
-    public ResponseEntity<CommonApiResponse<ContentItemView>> getSingleContentItem(@PathVariable("id") Integer contentId) {
+    public ResponseEntity<CommonApiResponse<ContentItemView>> getSingleContentItem(
+            @PathVariable("id") Integer contentId) {
 
         ViewDomainRequest requestEntity = ViewDomainRequest.builder().contentId(contentId).build();
 

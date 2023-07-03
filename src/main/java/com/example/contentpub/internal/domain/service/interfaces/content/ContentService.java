@@ -1,4 +1,4 @@
-package com.example.contentpub.internal.domain.service.content;
+package com.example.contentpub.internal.domain.service.interfaces.content;
 
 import com.example.contentpub.internal.domain.dto.CommonDomainResponse;
 import com.example.contentpub.internal.domain.dto.ContentDomainRequest;

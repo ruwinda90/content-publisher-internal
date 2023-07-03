@@ -1,19 +1,19 @@
-package com.example.contentpub.internal.domain.service;
+package com.example.contentpub.internal.domain.service.impl;
 
-import com.example.contentpub.internal.application.dto.request.CreatePublisherRequest;
-import com.example.contentpub.internal.domain.constant.ErrorCode;
-import com.example.contentpub.internal.domain.constant.Role;
-import com.example.contentpub.internal.domain.dto.CommonDomainResponse;
-import com.example.contentpub.internal.external.entity.Country;
-import com.example.contentpub.internal.external.entity.User;
-import com.example.contentpub.internal.external.entity.Writer;
-import com.example.contentpub.internal.external.entity.WriterDescription;
-import com.example.contentpub.internal.domain.exception.DomainException;
 import com.example.contentpub.internal.domain.boundary.repository.CountryRepository;
 import com.example.contentpub.internal.domain.boundary.repository.UserRepository;
 import com.example.contentpub.internal.domain.boundary.repository.WriterDescriptionRepository;
 import com.example.contentpub.internal.domain.boundary.repository.WriterRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.contentpub.internal.domain.constant.ErrorCode;
+import com.example.contentpub.internal.domain.constant.Role;
+import com.example.contentpub.internal.domain.dto.CommonDomainResponse;
+import com.example.contentpub.internal.domain.dto.publish.DomainPublisherRequest;
+import com.example.contentpub.internal.domain.exception.DomainException;
+import com.example.contentpub.internal.domain.service.interfaces.PublisherService;
+import com.example.contentpub.internal.external.entity.Country;
+import com.example.contentpub.internal.external.entity.User;
+import com.example.contentpub.internal.external.entity.Writer;
+import com.example.contentpub.internal.external.entity.WriterDescription;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -21,21 +21,27 @@ import static com.example.contentpub.internal.domain.constant.DomainConstants.FA
 import static com.example.contentpub.internal.domain.constant.DomainConstants.SUCCESS;
 
 @Service
-public class PublisherService {
+public class PublisherServiceImpl implements PublisherService {
 
-    @Autowired
-    private WriterRepository writerRepository;
+    private final WriterRepository writerRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private CountryRepository countryRepository;
+    private final CountryRepository countryRepository;
 
-    @Autowired
-    private WriterDescriptionRepository writerDescriptionRepository;
+    private final WriterDescriptionRepository writerDescriptionRepository;
 
-    public CommonDomainResponse<String> createPublisher(CreatePublisherRequest createPublisherRequest) {
+    public PublisherServiceImpl(WriterRepository writerRepository, UserRepository userRepository,
+                                CountryRepository countryRepository,
+                                WriterDescriptionRepository writerDescriptionRepository) {
+        this.writerRepository = writerRepository;
+        this.userRepository = userRepository;
+        this.countryRepository = countryRepository;
+        this.writerDescriptionRepository = writerDescriptionRepository;
+    }
+
+    @Override
+    public CommonDomainResponse<String> createPublisher(DomainPublisherRequest createPublisherRequest) {
 
         CommonDomainResponse<String> response = new CommonDomainResponse<>();
 

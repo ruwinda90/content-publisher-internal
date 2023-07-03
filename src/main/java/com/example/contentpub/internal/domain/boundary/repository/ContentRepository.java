@@ -1,8 +1,10 @@
 package com.example.contentpub.internal.domain.boundary.repository;
 
 import com.example.contentpub.internal.external.entity.Content;
-import com.example.contentpub.internal.external.entity.projection.CompactContentDbView;
-import com.example.contentpub.internal.external.entity.projection.ContentDbView;
+import com.example.contentpub.internal.domain.dto.view.CompactContentItemData;
+import com.example.contentpub.internal.domain.dto.view.ContentItemData;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -18,24 +20,17 @@ public interface ContentRepository extends JpaRepository<Content, Integer> {
 
     Optional<Content> findById(Integer id);
 
-    @Query(value = "SELECT a.id as id, a.title as title, b.summary as summary, b.details as details," +
-            " a.created_at as createdAt, a.updated_at as updatedAt, c.id as writerId, c.name as writerName" +
-            " FROM (SELECT * FROM content WHERE id = :contentId) AS a" +
-            " INNER JOIN content_details AS b ON a.id = b.content_id" +
-            " INNER JOIN writer as c ON a.writer_id = c.id;", nativeQuery = true)
-    Optional<ContentDbView> findByIdWithDetails(@Param("contentId") Integer id);
+    @Query(value = "SELECT new com.example.contentpub.internal.domain.dto.view.ContentItemData(" +
+            "c.id, c.title, c.contentDetails.summary, c.contentDetails.details, c.createdAt, c.updatedAt, " +
+            "c.writer.id, c.writer.name)" +
+            " FROM Content c WHERE c.id =:contentId")
+    Optional<ContentItemData> findByIdWithDetails(@Param("contentId") Integer id);
 
-    @Query(value = "SELECT a.id as id, a.title as title, a.created_at as createdAt," +
-            " a.updated_at as updatedAt, c.id as writerId, c.name as writerName FROM" +
-                        " (SELECT * FROM content WHERE category_id = :categoryId" +
-                        " ORDER BY updated_at DESC LIMIT :pageSize OFFSET :offset) AS a" +
-                    " INNER JOIN writer as c ON a.writer_id = c.id;", nativeQuery = true)
-    List<CompactContentDbView> findContentByCategoryWithPagination(@Param("categoryId") Integer categoryId,
-                                                                   @Param("pageSize") Integer pageSize,
-                                                                   @Param("offset") Integer offset);
-
-    @Query(value = "SELECT COUNT(*) FROM content WHERE category_id = :categoryId", nativeQuery = true)
-    Integer findContentCountByCategory(@Param("categoryId") Integer categoryId);
+    @Query(value = "SELECT new com.example.contentpub.internal.domain.dto.view.CompactContentItemData(" +
+            "c.id, c.title, c.createdAt, c.updatedAt, c.writer.id, c.writer.name) " +
+            "FROM Content c WHERE c.category.id =:categoryId")
+    Page<CompactContentItemData> findContentByCategoryWithPagination(@Param("categoryId") Integer categoryId,
+                                                                     PageRequest pageRequest);
 
     @Transactional
     @Modifying

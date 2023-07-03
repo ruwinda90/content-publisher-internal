@@ -1,9 +1,9 @@
-package com.example.contentpub.internal.application.dto.request;
+package com.example.contentpub.internal.domain.dto.publish;
 
 import lombok.Data;
 
 @Data
-public class CreatePublisherRequest {
+public class DomainPublisherRequest {
 
     private Integer userId;
 

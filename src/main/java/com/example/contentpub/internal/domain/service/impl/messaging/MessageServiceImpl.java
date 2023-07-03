@@ -1,7 +1,9 @@
-package com.example.contentpub.internal.domain.service.messaging;
+package com.example.contentpub.internal.domain.service.impl.messaging;
 
 import com.example.contentpub.internal.domain.dto.messaging.MessageDto;
 import com.example.contentpub.internal.domain.dto.messaging.NotifyDto;
+import com.example.contentpub.internal.domain.service.interfaces.messaging.MessageService;
+import com.example.contentpub.internal.domain.boundary.service.PublishEventService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -17,7 +19,7 @@ import java.util.UUID;
 
 @Service
 @Slf4j
-public class MessageUtil {
+public class MessageServiceImpl implements MessageService {
 
     @Autowired
     private PublishEventService publishEventService;
@@ -26,6 +28,7 @@ public class MessageUtil {
     private boolean isNotificationSendEnabled;
 
     @Async("messagingThreadPool")
+    @Override
     public void prepareAndSendMessage(MessageDto messageDto) {
 
         try {

@@ -1,14 +1,14 @@
-package com.example.contentpub.internal.domain.service.content;
+package com.example.contentpub.internal.domain.service.impl.content;
 
+import com.example.contentpub.internal.domain.boundary.repository.ContentRepository;
 import com.example.contentpub.internal.domain.constant.ContentAction;
 import com.example.contentpub.internal.domain.dto.CommonDomainResponse;
 import com.example.contentpub.internal.domain.dto.ContentDomainRequest;
-import com.example.contentpub.internal.external.entity.Content;
 import com.example.contentpub.internal.domain.dto.messaging.MessageDto;
 import com.example.contentpub.internal.domain.exception.DomainException;
-import com.example.contentpub.internal.domain.boundary.repository.ContentRepository;
-import com.example.contentpub.internal.domain.service.messaging.MessageUtil;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.contentpub.internal.domain.service.interfaces.content.ContentService;
+import com.example.contentpub.internal.domain.service.interfaces.messaging.MessageService;
+import com.example.contentpub.internal.external.entity.Content;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -17,14 +17,17 @@ import static com.example.contentpub.internal.domain.constant.DomainConstants.SU
 import static com.example.contentpub.internal.domain.constant.ErrorCode.CONTENT_NOT_BELONG_TO_USER;
 import static com.example.contentpub.internal.domain.constant.ErrorCode.CONTENT_NOT_FOUND;
 
-@Service("EDIT")
-public class EditService implements ContentService {
+@Service("DELETE")
+public class DeleteService implements ContentService {
 
-    @Autowired
-    private ContentRepository contentRepository;
+    private final ContentRepository contentRepository;
 
-    @Autowired
-    private MessageUtil messageUtil;
+    private final MessageService messageService;
+
+    public DeleteService(ContentRepository contentRepository, MessageService messageService) {
+        this.contentRepository = contentRepository;
+        this.messageService = messageService;
+    }
 
     @Override
     public CommonDomainResponse<String> process(ContentDomainRequest domainRequest) {
@@ -32,27 +35,17 @@ public class EditService implements ContentService {
         CommonDomainResponse<String> response = new CommonDomainResponse<>();
 
         try {
-            Content contentToBeEdited = contentRepository.findById(domainRequest.getContentId())
+            Content contentToBeDeleted = contentRepository.findById(domainRequest.getContentId())
                     .orElseThrow(() -> new DomainException(CONTENT_NOT_FOUND));
 
-            if (!contentToBeEdited.getWriter().getUser().getId()
+            if (!contentToBeDeleted.getWriter().getUser().getId()
                     .equals(domainRequest.getUserId())) { // Only the owner can modify/delete content.
                 throw new DomainException(CONTENT_NOT_BELONG_TO_USER);
             }
 
-            if (domainRequest.getTitle() != null) {
-                contentToBeEdited.setTitle(domainRequest.getTitle());
-            }
-            if (domainRequest.getSummary() != null) {
-                contentToBeEdited.getContentDetails().setSummary(domainRequest.getSummary());
-            }
-            if (domainRequest.getDetails() != null) {
-                contentToBeEdited.getContentDetails().setDetails(domainRequest.getDetails());
-            }
+            String contentCategory = contentToBeDeleted.getCategory().getName();
 
-            String contentCategory = contentToBeEdited.getCategory().getName();
-
-            contentRepository.save(contentToBeEdited);
+            contentRepository.delete(contentToBeDeleted.getId());
 
             response.setStatusCode(HttpStatus.OK.value());
             response.setStatus(SUCCESS);
@@ -61,8 +54,8 @@ public class EditService implements ContentService {
             MessageDto message = MessageDto.builder()
                     .category(contentCategory)
                     .contentId(domainRequest.getContentId())
-                    .actionType(ContentAction.EDIT).build();
-            messageUtil.prepareAndSendMessage(message);
+                    .actionType(ContentAction.DELETE).build();
+            messageService.prepareAndSendMessage(message);
 
         } catch (DomainException ex) {
             response.setStatusCode(ex.getHttpStatusCode());

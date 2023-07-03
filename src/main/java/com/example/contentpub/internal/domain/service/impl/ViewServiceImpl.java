@@ -1,18 +1,18 @@
-package com.example.contentpub.internal.domain.service;
+package com.example.contentpub.internal.domain.service.impl;
 
-import com.example.contentpub.internal.external.entity.projection.ContentDbView;
-import com.example.contentpub.internal.domain.dto.CommonDomainResponse;
-import com.example.contentpub.internal.domain.dto.view.*;
-import com.example.contentpub.internal.external.entity.projection.CompactContentDbView;
-import com.example.contentpub.internal.domain.exception.DomainException;
 import com.example.contentpub.internal.domain.boundary.repository.CategoryRepository;
 import com.example.contentpub.internal.domain.boundary.repository.ContentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.contentpub.internal.domain.dto.CommonDomainResponse;
+import com.example.contentpub.internal.domain.dto.view.*;
+import com.example.contentpub.internal.domain.exception.DomainException;
+import com.example.contentpub.internal.domain.service.interfaces.ViewService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,17 +21,22 @@ import static com.example.contentpub.internal.domain.constant.DomainConstants.SU
 import static com.example.contentpub.internal.domain.constant.ErrorCode.*;
 
 @Service
-public class ViewService {
+public class ViewServiceImpl implements ViewService {
 
-    @Autowired
-    private ContentRepository contentRepository;
+    private final ContentRepository contentRepository;
 
-    @Autowired
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
-    @Value("${view.content-list.page-size.max:200}")
-    private Integer maximumPageSize;
+    private final Integer maximumPageSize;
 
+    public ViewServiceImpl(ContentRepository contentRepository, CategoryRepository categoryRepository,
+                           @Value("${view.content-list.page-size.max:200}") Integer maximumPageSize) {
+        this.contentRepository = contentRepository;
+        this.categoryRepository = categoryRepository;
+        this.maximumPageSize = maximumPageSize;
+    }
+
+    @Override
     public CommonDomainResponse<ContentListView> getContentList(ViewDomainRequest requestEntity) {
 
         CommonDomainResponse<ContentListView> response = new CommonDomainResponse<>();
@@ -45,21 +50,17 @@ public class ViewService {
 
             if (requestEntity.getPageSize() > maximumPageSize) {
                 throw new DomainException(String.format(PAGE_TOO_LARGE.getDescription(), maximumPageSize),
-                                PAGE_TOO_LARGE.getHttpStatusCode());
+                        PAGE_TOO_LARGE.getHttpStatusCode());
             }
 
-            Integer totalCount = contentRepository.findContentCountByCategory(requestEntity.getCategoryId());
+            Page<CompactContentItemData> contentPage = contentRepository
+                    .findContentByCategoryWithPagination(requestEntity.getCategoryId(),
+                            PageRequest.of(requestEntity.getPage(), requestEntity.getPageSize(), Sort.Direction.DESC,
+                                    "updatedAt"));
 
-            List<CompactContentDbView> contentList;
-            if (totalCount > 0) {
-                Integer offset = requestEntity.getPage() * requestEntity.getPageSize();
-                contentList = contentRepository.findContentByCategoryWithPagination(requestEntity.getCategoryId(),
-                                requestEntity.getPageSize(), offset);
-            } else {
-                contentList = new ArrayList<>();
-            }
+            List<CompactContentItemData> contentList = contentPage.getContent();
 
-            response.getDescription().setTotalCount(totalCount);
+            response.getDescription().setTotalCount(contentPage.getTotalElements());
             response.getDescription().setCurrentPage(requestEntity.getPage());
 
             List<ContentListItemView> contentListItemViewList = contentList
@@ -69,7 +70,7 @@ public class ViewService {
                             .createdAt(item.getCreatedAt().toString())
                             .updatedAt(item.getUpdatedAt().toString())
                             .writer(Writer.builder().id(item.getWriterId()).name(item.getWriterName()).build())
-                            .build()) .collect(Collectors.toList());
+                            .build()).collect(Collectors.toList());
 
 
             response.getDescription().setContentList(contentListItemViewList);
@@ -88,13 +89,14 @@ public class ViewService {
         return response;
     }
 
+    @Override
     public CommonDomainResponse<ContentItemView> getSingleContentItem(ViewDomainRequest requestEntity) {
 
         CommonDomainResponse<ContentItemView> response = new CommonDomainResponse<>();
         response.setDescription(new ContentItemView());
 
         try {
-            ContentDbView contentItemRawData = contentRepository.findByIdWithDetails(requestEntity.getContentId())
+            ContentItemData contentItemRawData = contentRepository.findByIdWithDetails(requestEntity.getContentId())
                     .orElseThrow(() -> new DomainException(CONTENT_NOT_FOUND));
 
             ContentItem contentItem = ContentItem.builder()

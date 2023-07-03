@@ -1,12 +1,8 @@
 package com.example.contentpub.internal.application.dto.request;
 
-import lombok.*;
+import lombok.Data;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@Data
 public class ContentCreateRequest {
 
     private String title;

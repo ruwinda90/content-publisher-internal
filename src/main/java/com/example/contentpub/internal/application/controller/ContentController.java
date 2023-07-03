@@ -5,7 +5,7 @@ import com.example.contentpub.internal.application.dto.request.ContentModifyRequ
 import com.example.contentpub.internal.application.dto.response.CommonApiResponse;
 import com.example.contentpub.internal.domain.dto.CommonDomainResponse;
 import com.example.contentpub.internal.domain.dto.ContentDomainRequest;
-import com.example.contentpub.internal.domain.service.content.ContentService;
+import com.example.contentpub.internal.domain.service.interfaces.content.ContentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +26,6 @@ public class ContentController {
         this.contentServiceMap = contentServiceMap;
     }
 
-
     /**
      * Create new content.
      *
@@ -34,7 +33,8 @@ public class ContentController {
      * @return the response indicating the status of the request.
      */
     @PostMapping("/content")
-    public ResponseEntity<CommonApiResponse<String>> createContent(@RequestBody ContentCreateRequest contentCreateRequest) {
+    public ResponseEntity<CommonApiResponse<String>> createContent(
+            @RequestBody ContentCreateRequest contentCreateRequest) {
 
         ContentDomainRequest requestEntity = ContentDomainRequest.builder()
                 .title(contentCreateRequest.getTitle())
@@ -60,8 +60,8 @@ public class ContentController {
      * @return the response indicating the status of the request.
      */
     @PutMapping("/content/{id}")
-    public ResponseEntity<CommonApiResponse<String>> updateContent(@RequestBody ContentModifyRequest contentModifyRequest,
-                                                           @PathVariable("id") Integer contentId) {
+    public ResponseEntity<CommonApiResponse<String>> updateContent(
+            @RequestBody ContentModifyRequest contentModifyRequest, @PathVariable("id") Integer contentId) {
 
         ContentDomainRequest requestEntity = ContentDomainRequest.builder()
                 .contentId(contentId)
