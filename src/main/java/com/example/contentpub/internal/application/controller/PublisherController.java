@@ -4,7 +4,6 @@ import com.example.contentpub.internal.application.dto.request.CreatePublisherRe
 import com.example.contentpub.internal.application.dto.response.CommonApiResponse;
 import com.example.contentpub.internal.domain.dto.CommonDomainResponse;
 import com.example.contentpub.internal.domain.service.PublisherService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,8 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/publisher")
 public class PublisherController {
 
-    @Autowired
-    private PublisherService publisherService;
+    private final PublisherService publisherService;
+
+    public PublisherController(PublisherService publisherService) {
+        this.publisherService = publisherService;
+    }
 
     /**
      * The endpoint to change the user role from READER to WRITER.

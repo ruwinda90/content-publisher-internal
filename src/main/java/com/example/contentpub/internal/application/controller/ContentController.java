@@ -6,7 +6,6 @@ import com.example.contentpub.internal.application.dto.response.CommonApiRespons
 import com.example.contentpub.internal.domain.dto.CommonDomainResponse;
 import com.example.contentpub.internal.domain.dto.ContentDomainRequest;
 import com.example.contentpub.internal.domain.service.content.ContentService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,8 +20,12 @@ import static com.example.contentpub.internal.domain.constant.DomainConstants.*;
 @RequestMapping("/publisher")
 public class ContentController {
 
-    @Autowired
-    private Map<String, ContentService> contentServiceMap;
+    private final Map<String, ContentService> contentServiceMap;
+
+    public ContentController(Map<String, ContentService> contentServiceMap) {
+        this.contentServiceMap = contentServiceMap;
+    }
+
 
     /**
      * Create new content.

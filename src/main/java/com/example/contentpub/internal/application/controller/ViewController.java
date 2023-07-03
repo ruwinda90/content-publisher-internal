@@ -2,11 +2,10 @@ package com.example.contentpub.internal.application.controller;
 
 import com.example.contentpub.internal.application.dto.response.CommonApiResponse;
 import com.example.contentpub.internal.domain.dto.CommonDomainResponse;
-import com.example.contentpub.internal.domain.dto.view.ContentListView;
 import com.example.contentpub.internal.domain.dto.view.ContentItemView;
+import com.example.contentpub.internal.domain.dto.view.ContentListView;
 import com.example.contentpub.internal.domain.dto.view.ViewDomainRequest;
 import com.example.contentpub.internal.domain.service.ViewService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,8 +18,11 @@ import static com.example.contentpub.internal.application.constant.ParamConstant
 @RequestMapping("/view")
 public class ViewController {
 
-    @Autowired
-    private ViewService viewService;
+    private final ViewService viewService;
+
+    public ViewController(ViewService viewService) {
+        this.viewService = viewService;
+    }
 
     /**
      * View a list of content according to search criteria. Does not contain the content details of the fetched content.
