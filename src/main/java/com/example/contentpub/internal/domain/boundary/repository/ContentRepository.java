@@ -1,10 +1,10 @@
 package com.example.contentpub.internal.domain.boundary.repository;
 
-import com.example.contentpub.internal.external.entity.Content;
 import com.example.contentpub.internal.domain.dto.view.CompactContentItemData;
 import com.example.contentpub.internal.domain.dto.view.ContentItemData;
+import com.example.contentpub.internal.external.entity.Content;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -12,7 +12,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -30,7 +29,7 @@ public interface ContentRepository extends JpaRepository<Content, Integer> {
             "c.id, c.title, c.createdAt, c.updatedAt, c.writer.id, c.writer.name) " +
             "FROM Content c WHERE c.category.id =:categoryId")
     Page<CompactContentItemData> findContentByCategoryWithPagination(@Param("categoryId") Integer categoryId,
-                                                                     PageRequest pageRequest);
+                                                                     Pageable pageRequest);
 
     @Transactional
     @Modifying
