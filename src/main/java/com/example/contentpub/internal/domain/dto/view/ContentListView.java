@@ -19,6 +19,4 @@ public class ContentListView {
 
     private Integer currentPage;
 
-    private String description;
-
 }

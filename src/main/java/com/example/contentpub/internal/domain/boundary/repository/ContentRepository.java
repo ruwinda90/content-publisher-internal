@@ -26,7 +26,7 @@ public interface ContentRepository extends JpaRepository<Content, Integer> {
     Optional<ContentItemData> findByIdWithDetails(@Param("contentId") Integer id);
 
     @Query(value = "SELECT new com.example.contentpub.internal.domain.dto.view.CompactContentItemData(" +
-            "c.id, c.title, c.createdAt, c.updatedAt, c.writer.id, c.writer.name) " +
+            "c.id, c.title, c.summary, c.createdAt, c.updatedAt, c.writer.id, c.writer.name, c.category.id, c.category.name) " +
             "FROM Content c WHERE c.category.id =:categoryId")
     Page<CompactContentItemData> findContentByCategoryWithPagination(@Param("categoryId") Integer categoryId,
                                                                      Pageable pageRequest);

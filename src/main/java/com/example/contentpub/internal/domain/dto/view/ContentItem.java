@@ -21,6 +21,6 @@ public class ContentItem {
 
     private String updatedAt;
 
-    private Writer writer;
+    private WriterDto writerDto;
 
 }

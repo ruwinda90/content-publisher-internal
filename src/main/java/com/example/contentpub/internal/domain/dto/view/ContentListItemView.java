@@ -13,10 +13,14 @@ public class ContentListItemView {
 
     private String title;
 
+    private String summary;
+
     private String createdAt;
 
     private String updatedAt;
 
-    private Writer writer;
+    private WriterDto writer;
+
+    private CategoryDto category;
 
 }

@@ -13,6 +13,8 @@ public class CompactContentItemData {
 
     private String title;
 
+    private String summary;
+
     private Date createdAt;
 
     private Date updatedAt;
@@ -20,5 +22,9 @@ public class CompactContentItemData {
     private Integer writerId;
 
     private String writerName;
+
+    private Integer categoryId;
+
+    private String categoryName;
 
 }

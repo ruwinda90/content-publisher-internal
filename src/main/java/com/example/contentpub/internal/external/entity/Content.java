@@ -24,6 +24,8 @@ public class Content {
 
     private String title;
 
+    private String summary;
+
     @CreationTimestamp
     private Date createdAt;
 

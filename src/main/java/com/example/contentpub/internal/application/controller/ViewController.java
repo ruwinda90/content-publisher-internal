@@ -1,7 +1,9 @@
 package com.example.contentpub.internal.application.controller;
 
 import com.example.contentpub.internal.application.dto.response.CommonApiResponse;
+import com.example.contentpub.internal.application.dto.response.CommonApiResponse2;
 import com.example.contentpub.internal.domain.dto.CommonDomainResponse;
+import com.example.contentpub.internal.domain.dto.CommonDomainResponse2;
 import com.example.contentpub.internal.domain.dto.view.ContentItemView;
 import com.example.contentpub.internal.domain.dto.view.ContentListView;
 import com.example.contentpub.internal.domain.dto.view.ViewDomainRequest;
@@ -34,7 +36,7 @@ public class ViewController {
      * @return the list of content matching the criteria as request parameter.
      */
     @GetMapping("/content")
-    public ResponseEntity<CommonApiResponse<ContentListView>> getContentList(
+    public ResponseEntity<CommonApiResponse2<ContentListView>> getContentList(
             @RequestParam(name = CATEGORY_ID) Integer categoryId, @RequestParam(name = PAGE) Integer page,
             @RequestParam(name = PAGE_SIZE) Integer pageSize) {
 
@@ -44,10 +46,10 @@ public class ViewController {
                 .pageSize(pageSize)
                 .build();
 
-        CommonDomainResponse<ContentListView> domainResponse = viewService.getContentList(requestEntity);
+        CommonDomainResponse2<ContentListView> domainResponse = viewService.getContentList(requestEntity);
 
-        return ResponseEntity.status(domainResponse.getStatusCode())
-                .body(new CommonApiResponse<>(domainResponse.getStatus(), domainResponse.getDescription()));
+        return ResponseEntity.status(domainResponse.getHttpStatusCode())
+                .body(new CommonApiResponse2<>(domainResponse.getCode(), domainResponse.getDescription(), domainResponse.getData()));
     }
 
     /**

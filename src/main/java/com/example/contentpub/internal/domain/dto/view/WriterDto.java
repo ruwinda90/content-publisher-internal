@@ -7,7 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Writer {
+public class WriterDto {
 
     private Integer id; // writerId.
 

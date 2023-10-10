@@ -2,7 +2,9 @@ package com.example.contentpub.internal.domain.service.impl;
 
 import com.example.contentpub.internal.domain.boundary.repository.CategoryRepository;
 import com.example.contentpub.internal.domain.boundary.repository.ContentRepository;
+import com.example.contentpub.internal.domain.constant.StatusCode;
 import com.example.contentpub.internal.domain.dto.CommonDomainResponse;
+import com.example.contentpub.internal.domain.dto.CommonDomainResponse2;
 import com.example.contentpub.internal.domain.dto.view.*;
 import com.example.contentpub.internal.domain.exception.DomainException;
 import com.example.contentpub.internal.domain.service.interfaces.ViewService;
@@ -18,7 +20,7 @@ import java.util.stream.Collectors;
 
 import static com.example.contentpub.internal.domain.constant.DomainConstants.FAILURE;
 import static com.example.contentpub.internal.domain.constant.DomainConstants.SUCCESS;
-import static com.example.contentpub.internal.domain.constant.ErrorCode.*;
+import static com.example.contentpub.internal.domain.constant.ErrorCode.CONTENT_NOT_FOUND;
 
 @Service
 public class ViewServiceImpl implements ViewService {
@@ -37,53 +39,56 @@ public class ViewServiceImpl implements ViewService {
     }
 
     @Override
-    public CommonDomainResponse<ContentListView> getContentList(ViewDomainRequest requestEntity) {
+    public CommonDomainResponse2<ContentListView> getContentList(ViewDomainRequest requestEntity) {
 
-        CommonDomainResponse<ContentListView> response = new CommonDomainResponse<>();
-        response.setDescription(new ContentListView());
+        CommonDomainResponse2<ContentListView> response = new CommonDomainResponse2<>();
+        response.setData(new ContentListView());
 
         try {
 
             if (!categoryRepository.existsById(requestEntity.getCategoryId())) {
-                throw new DomainException(CATEGORY_NOT_FOUND);
+                throw new DomainException(StatusCode.CATEGORY_NOT_FOUND);
             }
 
             if (requestEntity.getPageSize() > maximumPageSize) {
-                throw new DomainException(String.format(PAGE_TOO_LARGE.getDescription(), maximumPageSize),
-                        PAGE_TOO_LARGE.getHttpStatusCode());
+                throw new DomainException(StatusCode.PAGE_TOO_LARGE.getCode(), StatusCode.PAGE_TOO_LARGE.getDescription(), StatusCode.PAGE_TOO_LARGE.getHttpStatus());
             }
 
             Page<CompactContentItemData> contentPage = contentRepository
                     .findContentByCategoryWithPagination(requestEntity.getCategoryId(),
-                            PageRequest.of(requestEntity.getPage(), requestEntity.getPageSize(), Sort.Direction.DESC,
+                            PageRequest.of(requestEntity.getPage() - 1, requestEntity.getPageSize(), Sort.Direction.DESC,
                                     "updatedAt"));
 
             List<CompactContentItemData> contentList = contentPage.getContent();
 
-            response.getDescription().setTotalCount(contentPage.getTotalElements());
-            response.getDescription().setCurrentPage(requestEntity.getPage());
+            response.getData().setTotalCount(contentPage.getTotalElements());
+            response.getData().setCurrentPage(requestEntity.getPage());
 
             List<ContentListItemView> contentListItemViewList = contentList
                     .stream().map(item -> ContentListItemView.builder()
                             .id(item.getId())
                             .title(item.getTitle())
+                            .summary(item.getSummary())
                             .createdAt(item.getCreatedAt().toString())
                             .updatedAt(item.getUpdatedAt().toString())
-                            .writer(Writer.builder().id(item.getWriterId()).name(item.getWriterName()).build())
+                            .writer(WriterDto.builder().id(item.getWriterId()).name(item.getWriterName()).build())
+                            .category(CategoryDto.builder().id(item.getCategoryId()).name(item.getCategoryName()).build())
                             .build()).collect(Collectors.toList());
 
 
-            response.getDescription().setContentList(contentListItemViewList);
-            response.setStatusCode(HttpStatus.OK.value());
-            response.setStatus(SUCCESS);
+            response.getData().setContentList(contentListItemViewList);
+            response.setHttpStatusCode(StatusCode.SUCCESS.getHttpStatus().value());
+            response.setCode(StatusCode.SUCCESS.getCode());
+            response.setDescription(StatusCode.SUCCESS.getDescription());
 
         } catch (DomainException ex) {
-            response.setStatusCode(ex.getHttpStatusCode());
-            response.setStatus(FAILURE);
-            response.getDescription().setDescription(ex.getMessage());
+            response.setHttpStatusCode(ex.getHttpStatusCode());
+            response.setCode(ex.getCode());
+            response.setDescription(ex.getMessage());
         } catch (Exception ex) {
-            response.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            response.setStatus(FAILURE);
+            response.setHttpStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setCode(StatusCode.INTERNAL_ERROR.getCode());
+            response.setDescription(StatusCode.INTERNAL_ERROR.getDescription());
         }
 
         return response;
@@ -106,7 +111,7 @@ public class ViewServiceImpl implements ViewService {
                     .details(contentItemRawData.getDetails())
                     .createdAt(contentItemRawData.getCreatedAt().toString())
                     .updatedAt(contentItemRawData.getUpdatedAt().toString())
-                    .writer(Writer.builder()
+                    .writerDto(WriterDto.builder()
                             .id(contentItemRawData.getWriterId())
                             .name(contentItemRawData.getWriterName())
                             .build())
