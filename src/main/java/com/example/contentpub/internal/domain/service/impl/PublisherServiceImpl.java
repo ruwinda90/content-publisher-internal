@@ -6,7 +6,9 @@ import com.example.contentpub.internal.domain.boundary.repository.WriterDescript
 import com.example.contentpub.internal.domain.boundary.repository.WriterRepository;
 import com.example.contentpub.internal.domain.constant.ErrorCode;
 import com.example.contentpub.internal.domain.constant.Role;
-import com.example.contentpub.internal.domain.dto.CommonDomainResponse;
+import com.example.contentpub.internal.domain.constant.StatusCode;
+import com.example.contentpub.internal.domain.dto.CommonDomainResponse2;
+import com.example.contentpub.internal.domain.dto.publish.CreatedWriter;
 import com.example.contentpub.internal.domain.dto.publish.DomainPublisherRequest;
 import com.example.contentpub.internal.domain.exception.DomainException;
 import com.example.contentpub.internal.domain.service.interfaces.PublisherService;
@@ -14,11 +16,7 @@ import com.example.contentpub.internal.external.entity.Country;
 import com.example.contentpub.internal.external.entity.User;
 import com.example.contentpub.internal.external.entity.Writer;
 import com.example.contentpub.internal.external.entity.WriterDescription;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
-import static com.example.contentpub.internal.domain.constant.DomainConstants.FAILURE;
-import static com.example.contentpub.internal.domain.constant.DomainConstants.SUCCESS;
 
 @Service
 public class PublisherServiceImpl implements PublisherService {
@@ -41,9 +39,9 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
-    public CommonDomainResponse<String> createPublisher(DomainPublisherRequest createPublisherRequest) {
+    public CommonDomainResponse2<CreatedWriter> createPublisher(DomainPublisherRequest createPublisherRequest) {
 
-        CommonDomainResponse<String> response = new CommonDomainResponse<>();
+        CommonDomainResponse2<CreatedWriter> response = new CommonDomainResponse2<>();
 
         try {
 
@@ -69,18 +67,21 @@ public class PublisherServiceImpl implements PublisherService {
             writerToBeSaved.setWriterDescription(writerDescription);
 
             writerDescriptionRepository.save(writerDescription);
-            writerRepository.save(writerToBeSaved);
+            Writer savedWriter = writerRepository.save(writerToBeSaved);
 
-            response.setStatusCode(HttpStatus.CREATED.value());
-            response.setStatus(SUCCESS);
+            response.setHttpStatusCode(StatusCode.CREATED.getHttpStatus().value());
+            response.setCode(StatusCode.CREATED.getCode());
+            response.setDescription(StatusCode.CREATED.getDescription());
+            response.setData(new CreatedWriter(savedWriter.getId()));
 
         } catch (DomainException ex) {
-            response.setStatusCode(ex.getHttpStatusCode());
-            response.setStatus(FAILURE);
+            response.setHttpStatusCode(ex.getHttpStatusCode());
+            response.setCode(ex.getCode());
             response.setDescription(ex.getMessage());
         } catch (Exception ex) {
-            response.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            response.setStatus(FAILURE);
+            response.setHttpStatusCode(StatusCode.INTERNAL_ERROR.getHttpStatus().value());
+            response.setCode(StatusCode.INTERNAL_ERROR.getCode());
+            response.setDescription(StatusCode.INTERNAL_ERROR.getDescription());
         }
 
         return response;

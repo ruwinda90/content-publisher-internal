@@ -1,8 +1,9 @@
 package com.example.contentpub.internal.application.controller;
 
 import com.example.contentpub.internal.application.dto.request.CreatePublisherRequest;
-import com.example.contentpub.internal.application.dto.response.CommonApiResponse;
-import com.example.contentpub.internal.domain.dto.CommonDomainResponse;
+import com.example.contentpub.internal.application.dto.response.CommonApiResponse2;
+import com.example.contentpub.internal.domain.dto.CommonDomainResponse2;
+import com.example.contentpub.internal.domain.dto.publish.CreatedWriter;
 import com.example.contentpub.internal.domain.dto.publish.DomainPublisherRequest;
 import com.example.contentpub.internal.domain.service.impl.PublisherServiceImpl;
 import com.example.contentpub.internal.domain.service.interfaces.PublisherService;
@@ -32,7 +33,7 @@ public class PublisherController {
      * @return the response indicating the status of the request.
      */
     @PostMapping("/register")
-    public ResponseEntity<CommonApiResponse<String>> createPublisher(
+    public ResponseEntity<CommonApiResponse2<CreatedWriter>> createPublisher(
             @RequestBody CreatePublisherRequest createPublisherRequest) {
 
         DomainPublisherRequest request = new DomainPublisherRequest();
@@ -41,10 +42,10 @@ public class PublisherController {
         request.setDescription(createPublisherRequest.getDescription());
         request.setCountryId(createPublisherRequest.getCountryId());
 
-        CommonDomainResponse<String> commonDomainResponse = publisherService.createPublisher(request);
+        CommonDomainResponse2<CreatedWriter> domainResponse = publisherService.createPublisher(request);
 
-        return ResponseEntity.status(commonDomainResponse.getStatusCode())
-                .body(new CommonApiResponse<>(commonDomainResponse.getStatus(), commonDomainResponse.getDescription()));
+        return ResponseEntity.status(domainResponse.getHttpStatusCode())
+                .body(new CommonApiResponse2<>(domainResponse.getCode(), domainResponse.getDescription(), domainResponse.getData()));
 
     }
 
