@@ -59,15 +59,15 @@ public class ViewController {
      * @return the details of the content.
      */
     @GetMapping("/content/{id}")
-    public ResponseEntity<CommonApiResponse<ContentItemView>> getSingleContentItem(
+    public ResponseEntity<CommonApiResponse2<ContentItemView>> getSingleContentItem(
             @PathVariable("id") Integer contentId) {
 
         ViewDomainRequest requestEntity = ViewDomainRequest.builder().contentId(contentId).build();
 
-        CommonDomainResponse<ContentItemView> domainResponse = viewService.getSingleContentItem(requestEntity);
+        CommonDomainResponse2<ContentItemView> domainResponse = viewService.getSingleContentItem(requestEntity);
 
-        return ResponseEntity.status(domainResponse.getStatusCode())
-                .body(new CommonApiResponse<>(domainResponse.getStatus(), domainResponse.getDescription()));
+        return ResponseEntity.status(domainResponse.getHttpStatusCode())
+                .body(new CommonApiResponse2<>(domainResponse.getCode(), domainResponse.getDescription(), domainResponse.getData()));
     }
 
 }

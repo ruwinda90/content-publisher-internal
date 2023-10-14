@@ -9,8 +9,20 @@ import lombok.*;
 @Builder
 public class ContentItemView {
 
-    private String description;
+    private Integer id;
 
-    private ContentItem contentItem;
+    private String title;
+
+    private String summary;
+
+    private String details;
+
+    private String createdAt;
+
+    private String updatedAt;
+
+    private WriterDto writer;
+
+    private CategoryDto category;
 
 }

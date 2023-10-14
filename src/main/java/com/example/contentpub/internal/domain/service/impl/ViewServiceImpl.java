@@ -3,7 +3,6 @@ package com.example.contentpub.internal.domain.service.impl;
 import com.example.contentpub.internal.domain.boundary.repository.CategoryRepository;
 import com.example.contentpub.internal.domain.boundary.repository.ContentRepository;
 import com.example.contentpub.internal.domain.constant.StatusCode;
-import com.example.contentpub.internal.domain.dto.CommonDomainResponse;
 import com.example.contentpub.internal.domain.dto.CommonDomainResponse2;
 import com.example.contentpub.internal.domain.dto.view.*;
 import com.example.contentpub.internal.domain.exception.DomainException;
@@ -18,8 +17,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.example.contentpub.internal.domain.constant.DomainConstants.FAILURE;
-import static com.example.contentpub.internal.domain.constant.DomainConstants.SUCCESS;
 import static com.example.contentpub.internal.domain.constant.ErrorCode.CONTENT_NOT_FOUND;
 
 @Service
@@ -95,39 +92,42 @@ public class ViewServiceImpl implements ViewService {
     }
 
     @Override
-    public CommonDomainResponse<ContentItemView> getSingleContentItem(ViewDomainRequest requestEntity) {
+    public CommonDomainResponse2<ContentItemView> getSingleContentItem(ViewDomainRequest requestEntity) {
 
-        CommonDomainResponse<ContentItemView> response = new CommonDomainResponse<>();
-        response.setDescription(new ContentItemView());
+        CommonDomainResponse2<ContentItemView> response = new CommonDomainResponse2<>();
 
         try {
             ContentItemData contentItemRawData = contentRepository.findByIdWithDetails(requestEntity.getContentId())
                     .orElseThrow(() -> new DomainException(CONTENT_NOT_FOUND));
 
-            ContentItem contentItem = ContentItem.builder()
+            ContentItemView contentItem = ContentItemView.builder()
                     .id(contentItemRawData.getId())
                     .title(contentItemRawData.getTitle())
                     .summary(contentItemRawData.getSummary())
                     .details(contentItemRawData.getDetails())
                     .createdAt(contentItemRawData.getCreatedAt().toString())
                     .updatedAt(contentItemRawData.getUpdatedAt().toString())
-                    .writerDto(WriterDto.builder()
+                    .writer(WriterDto.builder()
                             .id(contentItemRawData.getWriterId())
                             .name(contentItemRawData.getWriterName())
                             .build())
+                    .category(CategoryDto.builder().id(contentItemRawData.getCategoryId())
+                            .name(contentItemRawData.getCategoryName()).build())
                     .build();
 
-            response.getDescription().setContentItem(contentItem);
-            response.setStatusCode(HttpStatus.OK.value());
-            response.setStatus(SUCCESS);
+            response.setData(contentItem);
+            response.setHttpStatusCode(StatusCode.SUCCESS.getHttpStatus().value());
+            response.setCode(StatusCode.SUCCESS.getCode());
+            response.setDescription(StatusCode.SUCCESS.getDescription());
 
         } catch (DomainException ex) {
-            response.setStatusCode(ex.getHttpStatusCode());
-            response.setStatus(FAILURE);
-            response.getDescription().setDescription(ex.getMessage());
+            response.setHttpStatusCode(ex.getHttpStatusCode());
+            response.setCode(ex.getCode());
+            response.setDescription(ex.getMessage());
         } catch (Exception ex) {
-            response.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            response.setStatus(FAILURE);
+            response.setHttpStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setCode(StatusCode.INTERNAL_ERROR.getCode());
+            response.setDescription(StatusCode.INTERNAL_ERROR.getDescription());
         }
 
         return response;

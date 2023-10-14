@@ -25,4 +25,8 @@ public class ContentItemData {
 
     private String writerName;
 
+    private Integer categoryId;
+
+    private String categoryName;
+
 }
