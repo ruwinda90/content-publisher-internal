@@ -23,8 +23,6 @@ public class ContentDetails {
     @JoinColumn(name = "content_id", referencedColumnName = "id")
     private Content content;
 
-    private String summary;
-
     @Column(columnDefinition = "text")
     private String details;
 }

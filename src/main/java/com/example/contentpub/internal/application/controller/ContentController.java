@@ -2,16 +2,13 @@ package com.example.contentpub.internal.application.controller;
 
 import com.example.contentpub.internal.application.dto.request.ContentCreateRequest;
 import com.example.contentpub.internal.application.dto.request.ContentModifyRequest;
-import com.example.contentpub.internal.application.dto.response.CommonApiResponse;
-import com.example.contentpub.internal.domain.dto.CommonDomainResponse;
+import com.example.contentpub.internal.application.dto.response.CommonApiResponse2;
+import com.example.contentpub.internal.domain.dto.CommonDomainResponse2;
 import com.example.contentpub.internal.domain.dto.ContentDomainRequest;
+import com.example.contentpub.internal.domain.dto.publish.CreatedContent;
 import com.example.contentpub.internal.domain.service.interfaces.content.ContentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
-
-import static com.example.contentpub.internal.domain.constant.DomainConstants.*;
 
 /**
  * The ContentController contains Create, Update and Delete method APIs that relevant to content.
@@ -20,10 +17,10 @@ import static com.example.contentpub.internal.domain.constant.DomainConstants.*;
 @RequestMapping("/publisher")
 public class ContentController {
 
-    private final Map<String, ContentService> contentServiceMap;
+    private final ContentService contentService;
 
-    public ContentController(Map<String, ContentService> contentServiceMap) {
-        this.contentServiceMap = contentServiceMap;
+    public ContentController(ContentService contentService) {
+        this.contentService = contentService;
     }
 
     /**
@@ -33,7 +30,7 @@ public class ContentController {
      * @return the response indicating the status of the request.
      */
     @PostMapping("/content")
-    public ResponseEntity<CommonApiResponse<String>> createContent(
+    public ResponseEntity<CommonApiResponse2<CreatedContent>> createContent(
             @RequestBody ContentCreateRequest contentCreateRequest) {
 
         ContentDomainRequest requestEntity = ContentDomainRequest.builder()
@@ -44,11 +41,10 @@ public class ContentController {
                 .categoryId(contentCreateRequest.getCategoryId())
                 .build();
 
-        ContentService processor = contentServiceMap.get(CREATE_SERVICE);
-        CommonDomainResponse<String> commonDomainResponse = processor.process(requestEntity);
+        CommonDomainResponse2<CreatedContent> domainResponse = contentService.createContent(requestEntity);
 
-        return ResponseEntity.status(commonDomainResponse.getStatusCode())
-                .body(new CommonApiResponse<>(commonDomainResponse.getStatus(), commonDomainResponse.getDescription()));
+        return ResponseEntity.status(domainResponse.getHttpStatusCode())
+                .body(new CommonApiResponse2<>(domainResponse.getCode(), domainResponse.getDescription(), domainResponse.getData()));
 
     }
 
@@ -60,7 +56,7 @@ public class ContentController {
      * @return the response indicating the status of the request.
      */
     @PutMapping("/content/{id}")
-    public ResponseEntity<CommonApiResponse<String>> updateContent(
+    public ResponseEntity<CommonApiResponse2<String>> updateContent(
             @RequestBody ContentModifyRequest contentModifyRequest, @PathVariable("id") Integer contentId) {
 
         ContentDomainRequest requestEntity = ContentDomainRequest.builder()
@@ -71,11 +67,10 @@ public class ContentController {
                 .userId(contentModifyRequest.getUserId())
                 .build();
 
-        ContentService processor = contentServiceMap.get(EDIT_SERVICE);
-        CommonDomainResponse<String> commonDomainResponse = processor.process(requestEntity);
+        CommonDomainResponse2<String> domainResponse = contentService.editContent(requestEntity);
 
-        return ResponseEntity.status(commonDomainResponse.getStatusCode())
-                .body(new CommonApiResponse<>(commonDomainResponse.getStatus(), commonDomainResponse.getDescription()));
+        return ResponseEntity.status(domainResponse.getHttpStatusCode())
+                .body(new CommonApiResponse2<>(domainResponse.getCode(), domainResponse.getDescription(), domainResponse.getData()));
 
     }
 
@@ -87,7 +82,7 @@ public class ContentController {
      * @return the response indicating the status of the request.
      */
     @DeleteMapping("/content/{id}")
-    public ResponseEntity<CommonApiResponse<String>> deleteContent(@RequestParam(name = "userId") Integer userId,
+    public ResponseEntity<CommonApiResponse2<String>> deleteContent(@RequestParam(name = "userId") Integer userId,
                                                            @PathVariable("id") Integer contentId) {
 
         ContentDomainRequest requestEntity = ContentDomainRequest.builder()
@@ -95,11 +90,10 @@ public class ContentController {
                 .userId(userId)
                 .build();
 
-        ContentService processor = contentServiceMap.get(DELETE_SERVICE);
-        CommonDomainResponse<String> commonDomainResponse = processor.process(requestEntity);
+        CommonDomainResponse2<String> domainResponse = contentService.deleteContent(requestEntity);
 
-        return ResponseEntity.status(commonDomainResponse.getStatusCode())
-                .body(new CommonApiResponse<>(commonDomainResponse.getStatus(), commonDomainResponse.getDescription()));
+        return ResponseEntity.status(domainResponse.getHttpStatusCode())
+                .body(new CommonApiResponse2<>(domainResponse.getCode(), domainResponse.getDescription(), domainResponse.getData()));
 
     }
 

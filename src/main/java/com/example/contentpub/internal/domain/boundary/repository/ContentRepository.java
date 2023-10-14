@@ -20,7 +20,7 @@ public interface ContentRepository extends JpaRepository<Content, Integer> {
     Optional<Content> findById(Integer id);
 
     @Query(value = "SELECT new com.example.contentpub.internal.domain.dto.view.ContentItemData(" +
-            "c.id, c.title, c.contentDetails.summary, c.contentDetails.details, c.createdAt, c.updatedAt, " +
+            "c.id, c.title, c.summary, c.contentDetails.details, c.createdAt, c.updatedAt, " +
             "c.writer.id, c.writer.name, c.category.id, c.category.name)" +
             " FROM Content c WHERE c.id =:contentId")
     Optional<ContentItemData> findByIdWithDetails(@Param("contentId") Integer id);

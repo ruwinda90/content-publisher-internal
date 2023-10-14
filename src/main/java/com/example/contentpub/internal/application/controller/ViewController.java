@@ -1,8 +1,6 @@
 package com.example.contentpub.internal.application.controller;
 
-import com.example.contentpub.internal.application.dto.response.CommonApiResponse;
 import com.example.contentpub.internal.application.dto.response.CommonApiResponse2;
-import com.example.contentpub.internal.domain.dto.CommonDomainResponse;
 import com.example.contentpub.internal.domain.dto.CommonDomainResponse2;
 import com.example.contentpub.internal.domain.dto.view.ContentItemView;
 import com.example.contentpub.internal.domain.dto.view.ContentListView;
