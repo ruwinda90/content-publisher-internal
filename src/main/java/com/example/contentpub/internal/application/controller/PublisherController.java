@@ -1,7 +1,7 @@
 package com.example.contentpub.internal.application.controller;
 
 import com.example.contentpub.internal.application.dto.request.CreatePublisherRequest;
-import com.example.contentpub.internal.application.dto.response.CommonApiResponse2;
+import com.example.contentpub.internal.application.dto.response.CommonApiResponse;
 import com.example.contentpub.internal.domain.dto.CommonDomainResponse2;
 import com.example.contentpub.internal.domain.dto.publish.CreatedWriter;
 import com.example.contentpub.internal.domain.dto.publish.DomainPublisherRequest;
@@ -33,7 +33,7 @@ public class PublisherController {
      * @return the response indicating the status of the request.
      */
     @PostMapping("/register")
-    public ResponseEntity<CommonApiResponse2<CreatedWriter>> createPublisher(
+    public ResponseEntity<CommonApiResponse<CreatedWriter>> createPublisher(
             @RequestBody CreatePublisherRequest createPublisherRequest) {
 
         DomainPublisherRequest request = new DomainPublisherRequest();
@@ -45,7 +45,7 @@ public class PublisherController {
         CommonDomainResponse2<CreatedWriter> domainResponse = publisherService.createPublisher(request);
 
         return ResponseEntity.status(domainResponse.getHttpStatusCode())
-                .body(new CommonApiResponse2<>(domainResponse.getCode(), domainResponse.getDescription(), domainResponse.getData()));
+                .body(new CommonApiResponse<>(domainResponse.getCode(), domainResponse.getDescription(), domainResponse.getData()));
 
     }
 

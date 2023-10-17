@@ -1,6 +1,6 @@
 package com.example.contentpub.internal.application.controller;
 
-import com.example.contentpub.internal.application.dto.response.CommonApiResponse2;
+import com.example.contentpub.internal.application.dto.response.CommonApiResponse;
 import com.example.contentpub.internal.domain.dto.CommonDomainResponse2;
 import com.example.contentpub.internal.domain.dto.view.ContentItemView;
 import com.example.contentpub.internal.domain.dto.view.ContentListView;
@@ -34,7 +34,7 @@ public class ViewController {
      * @return the list of content matching the criteria as request parameter.
      */
     @GetMapping("/content")
-    public ResponseEntity<CommonApiResponse2<ContentListView>> getContentList(
+    public ResponseEntity<CommonApiResponse<ContentListView>> getContentList(
             @RequestParam(name = CATEGORY_ID) Integer categoryId, @RequestParam(name = PAGE) Integer page,
             @RequestParam(name = PAGE_SIZE) Integer pageSize) {
 
@@ -47,7 +47,7 @@ public class ViewController {
         CommonDomainResponse2<ContentListView> domainResponse = viewService.getContentList(requestEntity);
 
         return ResponseEntity.status(domainResponse.getHttpStatusCode())
-                .body(new CommonApiResponse2<>(domainResponse.getCode(), domainResponse.getDescription(), domainResponse.getData()));
+                .body(new CommonApiResponse<>(domainResponse.getCode(), domainResponse.getDescription(), domainResponse.getData()));
     }
 
     /**
@@ -57,7 +57,7 @@ public class ViewController {
      * @return the details of the content.
      */
     @GetMapping("/content/{id}")
-    public ResponseEntity<CommonApiResponse2<ContentItemView>> getSingleContentItem(
+    public ResponseEntity<CommonApiResponse<ContentItemView>> getSingleContentItem(
             @PathVariable("id") Integer contentId) {
 
         ViewDomainRequest requestEntity = ViewDomainRequest.builder().contentId(contentId).build();
@@ -65,7 +65,7 @@ public class ViewController {
         CommonDomainResponse2<ContentItemView> domainResponse = viewService.getSingleContentItem(requestEntity);
 
         return ResponseEntity.status(domainResponse.getHttpStatusCode())
-                .body(new CommonApiResponse2<>(domainResponse.getCode(), domainResponse.getDescription(), domainResponse.getData()));
+                .body(new CommonApiResponse<>(domainResponse.getCode(), domainResponse.getDescription(), domainResponse.getData()));
     }
 
 }

@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommonApiResponse2<T> {
+public class CommonApiResponse<T> {
 
     private String code;
 
