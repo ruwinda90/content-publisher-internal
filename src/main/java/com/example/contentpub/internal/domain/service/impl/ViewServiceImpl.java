@@ -7,6 +7,7 @@ import com.example.contentpub.internal.domain.dto.CommonDomainResponse2;
 import com.example.contentpub.internal.domain.dto.view.*;
 import com.example.contentpub.internal.domain.exception.DomainException;
 import com.example.contentpub.internal.domain.service.interfaces.ViewService;
+import com.example.contentpub.internal.external.entity.Category;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -124,6 +125,34 @@ public class ViewServiceImpl implements ViewService {
             response.setHttpStatusCode(ex.getHttpStatusCode());
             response.setCode(ex.getCode());
             response.setDescription(ex.getMessage());
+        } catch (Exception ex) {
+            response.setHttpStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setCode(StatusCode.INTERNAL_ERROR.getCode());
+            response.setDescription(StatusCode.INTERNAL_ERROR.getDescription());
+        }
+
+        return response;
+    }
+
+    @Override
+    public CommonDomainResponse2<CategoryListView> getCategoryList() {
+
+        CommonDomainResponse2<CategoryListView> response = new CommonDomainResponse2<>();
+
+        try {
+            List<Category> categoryRawDataList = categoryRepository.findAll();
+
+            List<CategoryView> categoryDataList = categoryRawDataList.stream()
+                    .map(item -> new CategoryView(item.getId(), item.getName())).collect(Collectors.toList());
+
+            CategoryListView categoryListView = new CategoryListView();
+            categoryListView.setCategoryList(categoryDataList);
+
+            response.setData(categoryListView);
+            response.setHttpStatusCode(StatusCode.SUCCESS.getHttpStatus().value());
+            response.setCode(StatusCode.SUCCESS.getCode());
+            response.setDescription(StatusCode.SUCCESS.getDescription());
+
         } catch (Exception ex) {
             response.setHttpStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setCode(StatusCode.INTERNAL_ERROR.getCode());

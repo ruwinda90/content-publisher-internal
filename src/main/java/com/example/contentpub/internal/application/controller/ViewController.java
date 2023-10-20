@@ -2,6 +2,7 @@ package com.example.contentpub.internal.application.controller;
 
 import com.example.contentpub.internal.application.dto.response.CommonApiResponse;
 import com.example.contentpub.internal.domain.dto.CommonDomainResponse2;
+import com.example.contentpub.internal.domain.dto.view.CategoryListView;
 import com.example.contentpub.internal.domain.dto.view.ContentItemView;
 import com.example.contentpub.internal.domain.dto.view.ContentListView;
 import com.example.contentpub.internal.domain.dto.view.ViewDomainRequest;
@@ -68,4 +69,12 @@ public class ViewController {
                 .body(new CommonApiResponse<>(domainResponse.getCode(), domainResponse.getDescription(), domainResponse.getData()));
     }
 
+    @GetMapping("/category")
+    public ResponseEntity<CommonApiResponse<CategoryListView>> getCategoryList() {
+
+        CommonDomainResponse2<CategoryListView> domainResponse = viewService.getCategoryList();
+
+        return ResponseEntity.status(domainResponse.getHttpStatusCode())
+                .body(new CommonApiResponse<>(domainResponse.getCode(), domainResponse.getDescription(), domainResponse.getData()));
+    }
 }
