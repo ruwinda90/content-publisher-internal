@@ -7,7 +7,7 @@ import com.example.contentpub.internal.domain.boundary.repository.WriterReposito
 import com.example.contentpub.internal.domain.constant.ErrorCode;
 import com.example.contentpub.internal.domain.constant.Role;
 import com.example.contentpub.internal.domain.constant.StatusCode;
-import com.example.contentpub.internal.domain.dto.CommonDomainResponse2;
+import com.example.contentpub.internal.domain.dto.CommonDomainResponse;
 import com.example.contentpub.internal.domain.dto.publish.CreatedWriter;
 import com.example.contentpub.internal.domain.dto.publish.DomainPublisherRequest;
 import com.example.contentpub.internal.domain.exception.DomainException;
@@ -39,9 +39,9 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
-    public CommonDomainResponse2<CreatedWriter> createPublisher(DomainPublisherRequest createPublisherRequest) {
+    public CommonDomainResponse<CreatedWriter> createPublisher(DomainPublisherRequest createPublisherRequest) {
 
-        CommonDomainResponse2<CreatedWriter> response = new CommonDomainResponse2<>();
+        CommonDomainResponse<CreatedWriter> response = new CommonDomainResponse<>();
 
         try {
 

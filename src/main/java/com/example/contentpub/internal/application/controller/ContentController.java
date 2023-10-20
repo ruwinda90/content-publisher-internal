@@ -3,7 +3,7 @@ package com.example.contentpub.internal.application.controller;
 import com.example.contentpub.internal.application.dto.request.ContentCreateRequest;
 import com.example.contentpub.internal.application.dto.request.ContentModifyRequest;
 import com.example.contentpub.internal.application.dto.response.CommonApiResponse;
-import com.example.contentpub.internal.domain.dto.CommonDomainResponse2;
+import com.example.contentpub.internal.domain.dto.CommonDomainResponse;
 import com.example.contentpub.internal.domain.dto.ContentDomainRequest;
 import com.example.contentpub.internal.domain.dto.publish.CreatedContent;
 import com.example.contentpub.internal.domain.service.interfaces.content.ContentService;
@@ -41,7 +41,7 @@ public class ContentController {
                 .categoryId(contentCreateRequest.getCategoryId())
                 .build();
 
-        CommonDomainResponse2<CreatedContent> domainResponse = contentService.createContent(requestEntity);
+        CommonDomainResponse<CreatedContent> domainResponse = contentService.createContent(requestEntity);
 
         return ResponseEntity.status(domainResponse.getHttpStatusCode())
                 .body(new CommonApiResponse<>(domainResponse.getCode(), domainResponse.getDescription(), domainResponse.getData()));
@@ -67,7 +67,7 @@ public class ContentController {
                 .userId(contentModifyRequest.getUserId())
                 .build();
 
-        CommonDomainResponse2<String> domainResponse = contentService.editContent(requestEntity);
+        CommonDomainResponse<String> domainResponse = contentService.editContent(requestEntity);
 
         return ResponseEntity.status(domainResponse.getHttpStatusCode())
                 .body(new CommonApiResponse<>(domainResponse.getCode(), domainResponse.getDescription(), domainResponse.getData()));
@@ -90,7 +90,7 @@ public class ContentController {
                 .userId(userId)
                 .build();
 
-        CommonDomainResponse2<String> domainResponse = contentService.deleteContent(requestEntity);
+        CommonDomainResponse<String> domainResponse = contentService.deleteContent(requestEntity);
 
         return ResponseEntity.status(domainResponse.getHttpStatusCode())
                 .body(new CommonApiResponse<>(domainResponse.getCode(), domainResponse.getDescription(), domainResponse.getData()));

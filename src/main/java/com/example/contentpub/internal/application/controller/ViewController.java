@@ -1,7 +1,7 @@
 package com.example.contentpub.internal.application.controller;
 
 import com.example.contentpub.internal.application.dto.response.CommonApiResponse;
-import com.example.contentpub.internal.domain.dto.CommonDomainResponse2;
+import com.example.contentpub.internal.domain.dto.CommonDomainResponse;
 import com.example.contentpub.internal.domain.dto.view.CategoryListView;
 import com.example.contentpub.internal.domain.dto.view.ContentItemView;
 import com.example.contentpub.internal.domain.dto.view.ContentListView;
@@ -45,7 +45,7 @@ public class ViewController {
                 .pageSize(pageSize)
                 .build();
 
-        CommonDomainResponse2<ContentListView> domainResponse = viewService.getContentList(requestEntity);
+        CommonDomainResponse<ContentListView> domainResponse = viewService.getContentList(requestEntity);
 
         return ResponseEntity.status(domainResponse.getHttpStatusCode())
                 .body(new CommonApiResponse<>(domainResponse.getCode(), domainResponse.getDescription(), domainResponse.getData()));
@@ -63,7 +63,7 @@ public class ViewController {
 
         ViewDomainRequest requestEntity = ViewDomainRequest.builder().contentId(contentId).build();
 
-        CommonDomainResponse2<ContentItemView> domainResponse = viewService.getSingleContentItem(requestEntity);
+        CommonDomainResponse<ContentItemView> domainResponse = viewService.getSingleContentItem(requestEntity);
 
         return ResponseEntity.status(domainResponse.getHttpStatusCode())
                 .body(new CommonApiResponse<>(domainResponse.getCode(), domainResponse.getDescription(), domainResponse.getData()));
@@ -72,7 +72,7 @@ public class ViewController {
     @GetMapping("/category")
     public ResponseEntity<CommonApiResponse<CategoryListView>> getCategoryList() {
 
-        CommonDomainResponse2<CategoryListView> domainResponse = viewService.getCategoryList();
+        CommonDomainResponse<CategoryListView> domainResponse = viewService.getCategoryList();
 
         return ResponseEntity.status(domainResponse.getHttpStatusCode())
                 .body(new CommonApiResponse<>(domainResponse.getCode(), domainResponse.getDescription(), domainResponse.getData()));

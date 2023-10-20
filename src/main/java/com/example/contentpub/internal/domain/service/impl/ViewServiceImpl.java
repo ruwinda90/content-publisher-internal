@@ -3,7 +3,7 @@ package com.example.contentpub.internal.domain.service.impl;
 import com.example.contentpub.internal.domain.boundary.repository.CategoryRepository;
 import com.example.contentpub.internal.domain.boundary.repository.ContentRepository;
 import com.example.contentpub.internal.domain.constant.StatusCode;
-import com.example.contentpub.internal.domain.dto.CommonDomainResponse2;
+import com.example.contentpub.internal.domain.dto.CommonDomainResponse;
 import com.example.contentpub.internal.domain.dto.view.*;
 import com.example.contentpub.internal.domain.exception.DomainException;
 import com.example.contentpub.internal.domain.service.interfaces.ViewService;
@@ -37,9 +37,9 @@ public class ViewServiceImpl implements ViewService {
     }
 
     @Override
-    public CommonDomainResponse2<ContentListView> getContentList(ViewDomainRequest requestEntity) {
+    public CommonDomainResponse<ContentListView> getContentList(ViewDomainRequest requestEntity) {
 
-        CommonDomainResponse2<ContentListView> response = new CommonDomainResponse2<>();
+        CommonDomainResponse<ContentListView> response = new CommonDomainResponse<>();
         response.setData(new ContentListView());
 
         try {
@@ -93,9 +93,9 @@ public class ViewServiceImpl implements ViewService {
     }
 
     @Override
-    public CommonDomainResponse2<ContentItemView> getSingleContentItem(ViewDomainRequest requestEntity) {
+    public CommonDomainResponse<ContentItemView> getSingleContentItem(ViewDomainRequest requestEntity) {
 
-        CommonDomainResponse2<ContentItemView> response = new CommonDomainResponse2<>();
+        CommonDomainResponse<ContentItemView> response = new CommonDomainResponse<>();
 
         try {
             ContentItemData contentItemRawData = contentRepository.findByIdWithDetails(requestEntity.getContentId())
@@ -135,9 +135,9 @@ public class ViewServiceImpl implements ViewService {
     }
 
     @Override
-    public CommonDomainResponse2<CategoryListView> getCategoryList() {
+    public CommonDomainResponse<CategoryListView> getCategoryList() {
 
-        CommonDomainResponse2<CategoryListView> response = new CommonDomainResponse2<>();
+        CommonDomainResponse<CategoryListView> response = new CommonDomainResponse<>();
 
         try {
             List<Category> categoryRawDataList = categoryRepository.findAll();

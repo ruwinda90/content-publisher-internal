@@ -6,7 +6,7 @@ import com.example.contentpub.internal.domain.boundary.repository.ContentReposit
 import com.example.contentpub.internal.domain.boundary.repository.WriterRepository;
 import com.example.contentpub.internal.domain.constant.ContentAction;
 import com.example.contentpub.internal.domain.constant.StatusCode;
-import com.example.contentpub.internal.domain.dto.CommonDomainResponse2;
+import com.example.contentpub.internal.domain.dto.CommonDomainResponse;
 import com.example.contentpub.internal.domain.dto.ContentDomainRequest;
 import com.example.contentpub.internal.domain.dto.messaging.MessageDto;
 import com.example.contentpub.internal.domain.dto.publish.CreatedContent;
@@ -45,9 +45,9 @@ public class ContentServiceImpl implements ContentService {
     }
 
     @Override
-    public CommonDomainResponse2<CreatedContent> createContent(ContentDomainRequest domainRequest) {
+    public CommonDomainResponse<CreatedContent> createContent(ContentDomainRequest domainRequest) {
 
-        CommonDomainResponse2<CreatedContent> response = new CommonDomainResponse2<>();
+        CommonDomainResponse<CreatedContent> response = new CommonDomainResponse<>();
 
         try {
 
@@ -106,9 +106,9 @@ public class ContentServiceImpl implements ContentService {
     }
 
     @Override
-    public CommonDomainResponse2<String> editContent(ContentDomainRequest domainRequest) {
+    public CommonDomainResponse<String> editContent(ContentDomainRequest domainRequest) {
 
-        CommonDomainResponse2<String> response = new CommonDomainResponse2<>();
+        CommonDomainResponse<String> response = new CommonDomainResponse<>();
 
         try {
             Content contentToBeEdited = contentRepository.findById(domainRequest.getContentId())
@@ -158,9 +158,9 @@ public class ContentServiceImpl implements ContentService {
     }
 
     @Override
-    public CommonDomainResponse2<String> deleteContent(ContentDomainRequest domainRequest) {
+    public CommonDomainResponse<String> deleteContent(ContentDomainRequest domainRequest) {
 
-        CommonDomainResponse2<String> response = new CommonDomainResponse2<>();
+        CommonDomainResponse<String> response = new CommonDomainResponse<>();
 
         try {
             Content contentToBeDeleted = contentRepository.findById(domainRequest.getContentId())

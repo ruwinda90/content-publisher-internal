@@ -13,10 +13,12 @@ import lombok.Setter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CommonDomainResponse<T> {
 
-    private Integer statusCode;
+    private Integer httpStatusCode;
 
-    private String status;
+    private String code;
 
-    private T description;
+    private String description;
+
+    private T data;
 
 }
